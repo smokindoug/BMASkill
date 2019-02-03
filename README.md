@@ -1,3 +1,3 @@
 # BMASkill
 BMA Alexa skill
-Alexa skill for the Bytown Motorcycle Association's volunteer hour recording application.
+Alexa skill for the [Bytown Motorcycle Association](http://bma1.ca/)'s volunteer hour recording application.
