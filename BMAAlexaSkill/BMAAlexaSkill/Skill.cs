@@ -21,6 +21,8 @@ namespace BMAAlexaSkill
         [FunctionName("BMAAlexaSkill")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, ILogger log)
         {
+            log.LogInformation("Post BMAAlexaSkill");
+
             var json = await req.ReadAsStringAsync();
             var skillRequest = JsonConvert.DeserializeObject<SkillRequest>(json);
 
@@ -43,13 +45,16 @@ namespace BMAAlexaSkill
                 if (request is LaunchRequest launchRequest)
                 {
                     log.LogInformation("Session started");
-
+                    var speech = new SsmlOutputSpeech();
+                    speech.Ssml = 
+                        "<speak>Welcome to the <say-as interpret-as=\"spell-out\">bma</say-as> volunteer reporting skill. How can I help?</speak>";
                     var welcomeMessage = await locale.Get(LanguageKeys.Welcome, null);
                     var welcomeRepromptMessage = await locale.Get(LanguageKeys.WelcomeReprompt, null);
-                    response = ResponseBuilder.Ask(welcomeMessage, RepromptBuilder.Create(welcomeRepromptMessage));
+                    response = ResponseBuilder.Ask(speech, RepromptBuilder.Create(welcomeRepromptMessage));
                 }
                 else if (request is IntentRequest intentRequest)
                 {
+                    log.LogInformation("Intent invoke");
                     // Checks whether to handle system messages defined by Amazon.
                     var systemIntentResponse = await HandleSystemIntentsAsync(intentRequest, locale);
                     if (systemIntentResponse.IsHandled)
@@ -59,8 +64,14 @@ namespace BMAAlexaSkill
                     else
                     {
                         // Processes request according to intentRequest.Intent.Name...
-                        var message = await locale.Get(LanguageKeys.Response, null);
-                        response = ResponseBuilder.Tell(message);
+                        var speech = new SsmlOutputSpeech();
+
+                        if (intentRequest.Intent.Name == "reporthours")
+                            speech.Ssml =
+                                "<speak>You have <say-as interpret-as=\"cardinal\">10</say-as> volunteer hours.</speak>";
+                        else
+                            speech.Ssml = "<speak>Sorry, I did not understand that.</speak>";
+                        response = ResponseBuilder.Tell(speech);
 
                         // Note: The ResponseBuilder.Tell method automatically sets the
                         // Response.ShouldEndSession property to true, so the session will be
