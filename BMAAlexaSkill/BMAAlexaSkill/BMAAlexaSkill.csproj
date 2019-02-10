@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Alexa.NET" Version="1.5.7" />
     <PackageReference Include="Alexa.NET.LocaleSpeech" Version="1.0.0" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.38.0.1495" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup>
@@ -18,5 +19,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Mail">
+      <HintPath>..\..\..\DeleteMeMail\packages\System.Net.Mail.1.0.0-rtm-00002\lib\net451\System.Net.Mail.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

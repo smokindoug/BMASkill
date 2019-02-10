@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BMAAlexaSkill.Extensions;
+using System.Net;
 
 namespace BMAAlexaSkill
 {
@@ -32,6 +33,8 @@ namespace BMAAlexaSkill
             {
                 return new BadRequestResult();
             }
+
+            RetrieveAlexaClientName(log, skillRequest.Context.System.ApiAccessToken);
 
             // Setup language resources.
             var store = SetupLanguageResources();
@@ -92,6 +95,25 @@ namespace BMAAlexaSkill
             }
 
             return new OkObjectResult(response);
+        }
+
+        private static bool RetrieveAlexaClientName(ILogger log, string apiToken)
+        {
+            using (WebClient client = new WebClient())
+            {
+                string bearerToken = String.Format("Bearer {0}", apiToken);
+                client.Headers[HttpRequestHeader.Authorization] = bearerToken;
+
+                try
+                {
+                    var rtn = client.DownloadString("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.name");
+                    log.LogInformation(rtn);
+                } catch (WebException wExc)
+                {
+                    log.LogError(wExc, "failed to get name from token {0}", apiToken);
+                }
+            }
+            return false;
         }
 
         private static async Task<(bool IsHandled, SkillResponse Response)> HandleSystemIntentsAsync(IntentRequest request, ILocaleSpeech locale)
