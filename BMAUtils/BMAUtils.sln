@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMAUtils", "BMAUtils\BMAUtils.csproj", "{00CBBD1D-C39E-4476-A9FC-5FABA6785B44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMAUtils_Test", "BMAUtils_Test\BMAUtils_Test.csproj", "{C06297E0-4165-4CA4-A2FA-3DA563A0AAD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00CBBD1D-C39E-4476-A9FC-5FABA6785B44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CBBD1D-C39E-4476-A9FC-5FABA6785B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CBBD1D-C39E-4476-A9FC-5FABA6785B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CBBD1D-C39E-4476-A9FC-5FABA6785B44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06297E0-4165-4CA4-A2FA-3DA563A0AAD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06297E0-4165-4CA4-A2FA-3DA563A0AAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06297E0-4165-4CA4-A2FA-3DA563A0AAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06297E0-4165-4CA4-A2FA-3DA563A0AAD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA5FDE55-6DB6-4A1E-9638-76E2FE37D2F8}
+	EndGlobalSection
+EndGlobal

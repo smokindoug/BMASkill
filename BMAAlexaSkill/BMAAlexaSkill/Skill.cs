@@ -34,7 +34,12 @@ namespace BMAAlexaSkill
                 return new BadRequestResult();
             }
 
-            RetrieveAlexaClientName(log, skillRequest.Context.System.ApiAccessToken);
+            Extensions.BMAUtils helper = null;
+            var name = RetrieveAlexaClientName(log, skillRequest.Context.System.ApiAccessToken);
+            if (name != null)
+            {
+                helper = Extensions.BMAUtils.GetOrReserveBMAHelper(JsonConvert.DeserializeObject<string>(name), log);
+            }
 
             // Setup language resources.
             var store = SetupLanguageResources();
@@ -97,7 +102,7 @@ namespace BMAAlexaSkill
             return new OkObjectResult(response);
         }
 
-        private static bool RetrieveAlexaClientName(ILogger log, string apiToken)
+        private static string RetrieveAlexaClientName(ILogger log, string apiToken)
         {
             using (WebClient client = new WebClient())
             {
@@ -108,13 +113,15 @@ namespace BMAAlexaSkill
                 {
                     var rtn = client.DownloadString("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.name");
                     log.LogInformation(rtn);
+                    return rtn;
                 } catch (WebException wExc)
                 {
                     log.LogError(wExc, "failed to get name from token {0}", apiToken);
                 }
             }
-            return false;
+            return null;
         }
+
 
         private static async Task<(bool IsHandled, SkillResponse Response)> HandleSystemIntentsAsync(IntentRequest request, ILocaleSpeech locale)
         {
