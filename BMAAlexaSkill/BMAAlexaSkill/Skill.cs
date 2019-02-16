@@ -34,11 +34,11 @@ namespace BMAAlexaSkill
                 return new BadRequestResult();
             }
 
-            Extensions.BMAUtils helper = null;
+            BMAUtils.BMAHelper helper = null;
             var name = RetrieveAlexaClientName(log, skillRequest.Context.System.ApiAccessToken);
             if (name != null)
             {
-                helper = Extensions.BMAUtils.GetOrReserveBMAHelper(JsonConvert.DeserializeObject<string>(name), log);
+                BMAUtils.BMAUtils.GetOrReserveBMAHelper(JsonConvert.DeserializeObject<string>(name), log);
             }
 
             // Setup language resources.
