@@ -33,6 +33,9 @@ namespace BMAUtils
                 {
                     helper.m_isUsed = true;
                     helper.m_owner = owner;
+                    var parts = owner.Split(new char[] {' ','\t' }, 2);
+                    helper.m_first = parts[0];
+                    helper.m_rest = parts.Length == 2 ? parts[1] : "";
                     log.LogInformation("" +
                         "Slot[{object}] given to owner: {owner}, and initialized[{init}",
                         helper.GetHashCode(), owner, helper.m_isVolunteerHourPageDownloaded);
@@ -51,6 +54,8 @@ namespace BMAUtils
 
         internal bool m_isUsed;
         internal string m_owner;
+        internal string m_first;
+        internal string m_rest;
         private string m_cookies;
         private string m_volunteerPageContents;
         internal bool m_isVolunteerHourPageDownloaded;

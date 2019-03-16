@@ -34,92 +34,9 @@ namespace BMAAlexaSkill
                 return new BadRequestResult();
             }
 
-            BMAUtils.BMAHelper helper = null;
-            var name = RetrieveAlexaClientName(log, skillRequest.Context.System.ApiAccessToken);
-            if (name != null)
-            {
-                BMAUtils.BMAUtils.GetOrReserveBMAHelper(JsonConvert.DeserializeObject<string>(name), log);
-            }
-
-            // Setup language resources.
-            var store = SetupLanguageResources();
-            var locale = skillRequest.CreateLocale(store);
-
-            var request = skillRequest.Request;
-            SkillResponse response = null;
-
-            try
-            {
-                if (request is LaunchRequest launchRequest)
-                {
-                    log.LogInformation("Session started");
-                    var speech = new SsmlOutputSpeech();
-                    speech.Ssml = 
-                        "<speak>Welcome to the <say-as interpret-as=\"spell-out\">bma</say-as> volunteer reporting skill. How can I help?</speak>";
-                    var welcomeMessage = await locale.Get(LanguageKeys.Welcome, null);
-                    var welcomeRepromptMessage = await locale.Get(LanguageKeys.WelcomeReprompt, null);
-                    response = ResponseBuilder.Ask(speech, RepromptBuilder.Create(welcomeRepromptMessage));
-                }
-                else if (request is IntentRequest intentRequest)
-                {
-                    log.LogInformation("Intent invoke");
-                    // Checks whether to handle system messages defined by Amazon.
-                    var systemIntentResponse = await HandleSystemIntentsAsync(intentRequest, locale);
-                    if (systemIntentResponse.IsHandled)
-                    {
-                        response = systemIntentResponse.Response;
-                    }
-                    else
-                    {
-                        // Processes request according to intentRequest.Intent.Name...
-                        var speech = new SsmlOutputSpeech();
-
-                        if (intentRequest.Intent.Name == "reporthours")
-                            speech.Ssml =
-                                "<speak>You have <say-as interpret-as=\"cardinal\">10</say-as> volunteer hours.</speak>";
-                        else
-                            speech.Ssml = "<speak>Sorry, I did not understand that.</speak>";
-                        response = ResponseBuilder.Tell(speech);
-
-                        // Note: The ResponseBuilder.Tell method automatically sets the
-                        // Response.ShouldEndSession property to true, so the session will be
-                        // automatically closed at the end of the response.
-                    }
-                }
-                else if (request is SessionEndedRequest sessionEndedRequest)
-                {
-                    log.LogInformation("Session ended");
-                    response = ResponseBuilder.Empty();
-                }
-            }
-            catch
-            {
-                var message = await locale.Get(LanguageKeys.Error, null);
-                response = ResponseBuilder.Tell(message);
-                response.Response.ShouldEndSession = false;
-            }
+            SkillResponse response = BMAUtils.BMAProcessor.processRequest(skillRequest, log);
 
             return new OkObjectResult(response);
-        }
-
-        private static string RetrieveAlexaClientName(ILogger log, string apiToken)
-        {
-            using (WebClient client = new WebClient())
-            {
-                string bearerToken = String.Format("Bearer {0}", apiToken);
-                client.Headers[HttpRequestHeader.Authorization] = bearerToken;
-
-                try
-                {
-                    var rtn = client.DownloadString("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.name");
-                    log.LogInformation(rtn);
-                    return rtn;
-                } catch (WebException wExc)
-                {
-                    log.LogError(wExc, "failed to get name from token {0}", apiToken);
-                }
-            }
-            return null;
         }
 
 

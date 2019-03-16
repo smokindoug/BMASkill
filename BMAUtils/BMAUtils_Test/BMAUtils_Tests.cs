@@ -39,7 +39,8 @@ namespace BMAUtils_Test
 
             helper.RetrieveVolunteerHourPage(m_logger.Object);
             helper.PostURL = "http://localhost:8080/addHours";
-            helper.PostVolunteerPage("first", "last", "task", 0, m_logger.Object);
+            helper.PostURL = "http://bma1.ca/record-volunteer-hours-c251.php";
+            helper.PostVolunteerPage("Doug", "McNeil", "Testing", 0, m_logger.Object);
         }
 
     }
