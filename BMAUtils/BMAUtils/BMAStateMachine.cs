@@ -23,6 +23,17 @@ namespace BMAUtils
             {
                 helper = BMAUtils.GetOrReserveBMAHelper(JsonConvert.DeserializeObject<string>(name), log);
             }
+            else
+            {
+                return new PermissionsProcessor(request, log).processRequest();
+            }
+
+            if (request.Session.Attributes == null)
+            {
+                request.Session.Attributes = new Dictionary<string, object>();
+            }
+            request.Session.Attributes["account_first"] = helper.m_first;
+            request.Session.Attributes["account_last"] = helper.m_rest;
             BaseProcessor processor = null;
             if (request.Request is LaunchRequest launchRequest)
             {
@@ -37,7 +48,8 @@ namespace BMAUtils
                 else if (intentRequest.Intent.Name == "addhours")
                 {
                     processor = new AddHoursProcessor(request, log);
-                } if (intentRequest.Intent.Name == "designate")
+                }
+                else if (intentRequest.Intent.Name == "designate")
                 {
                     processor = new DesignateProcessor(request, log);
                 }
@@ -140,7 +152,27 @@ namespace BMAUtils
         internal override SkillResponse processRequest()
         {
             m_log.LogInformation("Session started");
+            string first = null;
+            string last = null;
+            bool isDesignate = false;
+            if (LastRequest.Session.Attributes.ContainsKey("designated_last"))
+            {
+                isDesignate = true;
+            }
+            else
+            {
+                last = (string)LastRequest.Session.Attributes["account_last"];
+                first = (string)LastRequest.Session.Attributes["account_first"];
+            }
             var speech = new SsmlOutputSpeech();
+
+            if (isDesignate)
+            {
+                speech.Ssml = "<speak>I cannot report hours for a designated volunteer. If you cancel I will reset to the account owner.</speak>";
+                SkillResponse response =ResponseBuilder.Tell(speech);
+                response.Response.ShouldEndSession = false;
+                return response;
+            }
             speech.Ssml =
                 "<speak>You have <say-as interpret-as=\"cardinal\">10</say-as> volunteer hours.</speak>";
             SsmlOutputSpeech reprompt = null;
@@ -179,13 +211,21 @@ namespace BMAUtils
                 if (value.Key == "task")
                     task = value.Value.Value;
             }
+            string first = null;
+            string last = null;
             var speech = new SsmlOutputSpeech();
+
             speech.Ssml =
                 "<speak>I have added <say-as interpret-as=\"cardinal\">" +
                 hours +
-                "</say-as> hours to your task <prosody rate=\"slow\">" +
+                "</say-as> hours for the task <prosody rate=\"slow\">" +
                 task +
-                "</prosody>. Thank you.</speak>";
+                "</prosody>. For the volunteer " +
+                first +
+                " " +
+                last +
+                ". Thank you.</speak>";
+
             SsmlOutputSpeech reprompt = null;
             reprompt = new SsmlOutputSpeech();
             reprompt.Ssml = "<speak>If you want to continue, please ask me another b.m.a request.</speak>";
@@ -217,7 +257,7 @@ namespace BMAUtils
             string last = null;
             foreach (KeyValuePair<string, Alexa.NET.Request.Slot> value in m_intentRequest.Intent.Slots)
             {
-                if (value.Key == "AMAZON.US_FIRST_NAME")
+                if (value.Key == "first_name")
                     first = value.Value.Value;
                 if (value.Key == "last_name")
                     last = value.Value.Value;
@@ -277,9 +317,13 @@ namespace BMAUtils
         internal override SkillResponse processRequest()
         {
             m_log.LogInformation("Cancel");
+
+            LastRequest.Session.Attributes.Remove("designated_last");
+            LastRequest.Session.Attributes.Remove("designated_first");
+
             var speech = new SsmlOutputSpeech();
             speech.Ssml = m_msg;
-            SkillResponse response = ResponseBuilder.Tell(speech);
+            SkillResponse response = ResponseBuilder.Tell(speech, LastRequest.Session);
             response.Response.ShouldEndSession = false;
             return response;
         }
@@ -307,6 +351,21 @@ namespace BMAUtils
             speech.Ssml = "<speak>You can ask me to add volunteer hours or report volunteer hours.</speak>";
             SkillResponse response = ResponseBuilder.Tell(speech);
             response.Response.ShouldEndSession = false;
+            return response;
+        }
+    }
+
+    internal class PermissionsProcessor : BaseProcessor
+    {
+        internal PermissionsProcessor(SkillRequest request, ILogger log) : base (request, log) { }
+
+        internal override SkillResponse processRequest()
+        {
+            m_log.LogInformation("Account owner has not granted permission");
+            var speech = new SsmlOutputSpeech();
+            speech.Ssml = "<speak>I could not open the skill. Have you granted access to the b.m.a. Volunteer Skill?</speak>";
+            SkillResponse response = ResponseBuilder.Tell(speech);
+            response.Response.ShouldEndSession = true;
             return response;
         }
     }
