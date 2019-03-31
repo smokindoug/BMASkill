@@ -131,7 +131,7 @@ namespace BMAUtils
             m_log.LogInformation("Session started");
             var speech = new SsmlOutputSpeech();
             speech.Ssml =
-                "<speak>Welcome to the <say-as interpret-as=\"spell-out\">bma</say-as> volunteer reporting skill. How can I help?</speak>";
+                "<speak>Welcome to the <say-as interpret-as=\"spell-out\">bma</say-as>  hours reporting skill. How can I help?</speak>";
             SsmlOutputSpeech reprompt = null;
             reprompt = new SsmlOutputSpeech();
             reprompt.Ssml = "<speak>Hello, you can ask me something like <prosody rate=\"slow\">add hours.</prosody></speak>";
@@ -177,7 +177,7 @@ namespace BMAUtils
                 "<speak>You have <say-as interpret-as=\"cardinal\">10</say-as> volunteer hours.</speak>";
             SsmlOutputSpeech reprompt = null;
             reprompt = new SsmlOutputSpeech();
-            reprompt.Ssml = "<speak>I am ready for more requests. You can ask me something like <prosody rate=\"slow\">add hours.</prosody></speak>";
+            reprompt.Ssml = "<speak>I am ready for more requests. You can ask me something like <prosody rate=\"slow\">add hours or report hours.</prosody></speak>";
             return ResponseBuilder.Ask(
                 speech,
                 new Reprompt
@@ -204,6 +204,7 @@ namespace BMAUtils
             }
             string hours = null;
             string task = null;
+
             foreach (KeyValuePair<string, Alexa.NET.Request.Slot> value in m_intentRequest.Intent.Slots)
             {
                 if (value.Key == "hours")
@@ -211,20 +212,36 @@ namespace BMAUtils
                 if (value.Key == "task")
                     task = value.Value.Value;
             }
-            string first = null;
-            string last = null;
+
+            string first = LastRequest.Session.Attributes["account_first"] as string;
+            string last = LastRequest.Session.Attributes["account_last"] as string;
+            bool isDesignated = false;
+            if (LastRequest.Session.Attributes.ContainsKey("designated_last"))
+            {
+                isDesignated = true;
+                first = LastRequest.Session.Attributes["designated_first"] as string;
+                last = LastRequest.Session.Attributes["designated_last"] as string;
+            }
+
             var speech = new SsmlOutputSpeech();
 
-            speech.Ssml =
-                "<speak>I have added <say-as interpret-as=\"cardinal\">" +
-                hours +
-                "</say-as> hours for the task <prosody rate=\"slow\">" +
-                task +
-                "</prosody>. For the volunteer " +
-                first +
-                " " +
-                last +
-                ". Thank you.</speak>";
+            StringBuilder sb = new StringBuilder("<speak>");
+            sb.Append("I have added <say-as interpret-as=\"cardinal\">");
+            sb.Append(hours);
+            sb.Append("</say-as> hours for the task <prosody rate=\"slow\">");
+            sb.Append(task);
+            sb.Append("</prosody>");
+            if (isDesignated)
+            {
+                sb.Append(". For the volunteer ");
+                sb.Append(first);
+                sb.Append(" ");
+                sb.Append(last);
+            }
+            sb.Append(". Thank you");
+            sb.Append("</speak>");
+
+            speech.Ssml = sb.ToString();
 
             SsmlOutputSpeech reprompt = null;
             reprompt = new SsmlOutputSpeech();
@@ -269,10 +286,10 @@ namespace BMAUtils
                 " " 
                 +
                 last + 
-                "</prosody> designated volunteer. You can ask me to do something for them.</speak>";
+                "</prosody> designated volunteer. You can ask me to add hours for them.</speak>";
             SsmlOutputSpeech reprompt = null;
             reprompt = new SsmlOutputSpeech();
-            reprompt.Ssml = "<speak>If you want to continue, please ask me to do something for " +
+            reprompt.Ssml = "<speak>If you want to continue, please ask me to add hours for " +
                 first + " " + last + ".</speak>";
 
             if (LastRequest.Session.Attributes == null)
@@ -348,7 +365,7 @@ namespace BMAUtils
         {
             m_log.LogInformation("Help intent");
             var speech = new SsmlOutputSpeech();
-            speech.Ssml = "<speak>You can ask me to add volunteer hours or report volunteer hours.</speak>";
+            speech.Ssml = "<speak>You can ask me to add volunteer hours, report volunteer hours or designate volunteer.</speak>";
             SkillResponse response = ResponseBuilder.Tell(speech);
             response.Response.ShouldEndSession = false;
             return response;
@@ -363,7 +380,7 @@ namespace BMAUtils
         {
             m_log.LogInformation("Account owner has not granted permission");
             var speech = new SsmlOutputSpeech();
-            speech.Ssml = "<speak>I could not open the skill. Have you granted access to the b.m.a. Volunteer Skill?</speak>";
+            speech.Ssml = "<speak>I could not open the skill. Have you granted permission to the b.m.a. Volunteer Skill?</speak>";
             SkillResponse response = ResponseBuilder.Tell(speech);
             response.Response.ShouldEndSession = true;
             return response;
