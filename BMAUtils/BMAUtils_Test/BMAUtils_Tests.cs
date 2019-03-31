@@ -73,6 +73,7 @@ namespace BMAUtils_Test
                     // Get a reference to the file we created previously.
                     CloudFile file = sampleDir.GetFileReference("function.json");
                     Assert.AreEqual(true, file.Exists());
+                    file.
                 }
             }
         }
