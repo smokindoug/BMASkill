@@ -31,7 +31,7 @@ To add volunteer hours use phrases like these (after you have accessed the skill
 - add hours
 - add
 
-The skill will then ask you for the **number** of hours your want to add. Also, is asks for a descripion of the volunteer **task**. The task helps us associate volunteer activity. Once you confirm the entered information, the skill will perform the add and report the new total.
+The skill will then ask you for the **number** of hours your want to add. Also, it asks for a descripion of the volunteer **task**. The task helps us properly categorize volunteer activity. Once you confirm the entered information, the skill will perform the add and report the new total.
 
 Again, you can combine opening the skill and adding volunteer hours together:
 - open b.m.a, for adding volunteer hours
@@ -42,15 +42,15 @@ Next, the skill can be used to add volunteer hours to a **designated** volunteer
 - change volunteer
 - volunteer
 
-The skill will ask you for the designated volunteer's **last name** and **first name**. You will have to confirm this name. Please ensure accurracy! It makes it difficult for our volunteer hour recorder if the name is mangled. And your hours may not be counted.
+The skill will ask you for the designated volunteer's **first name** and **last name**. You will be asked to confirm. Please ensure accurracy! It makes it difficult for our volunteer hour recorder if the name is mangled. And the hours may not be counted.
 
-And you can combine opeing the still and designating a volunteer together:
+And yes, you can combine opening the skill and designating a volunteer in one go:
 - ask b.m.a. to change volunteer
 - open b.m.a. for volunteer
 
 Once you set the designated volunteer any **add** hours request is added for that designated volunteer. The skill does not currently keep a running total for a designated volunteer (it only keeps the running total for the Alexa user). 
 
-If you use the **cancel** or **stop** requests the skill will reset to no designated volunteer. It will use your Alexa *full name* again as the volunteer (the default). You can also quite the skill and **open** again.
+If you use the **cancel** or **stop** requests the skill will reset to no designated volunteer. It will use your Alexa *full name* again as the volunteer (the default). You can also **quite** the skill and **open** again.
 
 Lastly, you can ask the skill to report who the volunteer is:
 - who is volunteer
