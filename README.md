@@ -57,6 +57,8 @@ Lastly, you can ask the skill to report who the volunteer is:
 - who is designated volunteer
 - who is logged in
 
+Note: the skill will work if Alexa is configured for *Canadian english* or *American english*. French is currently not supported. Add an *issue* if you are interested in helping produce a French version.
+
 ## Privacy Policy
 The **BMA Alex Skill** uses your **Alexa User Name** to record the hours you add using the skill. It also uses this information to collect the total number of hours that you add using this skill.
 
@@ -65,8 +67,6 @@ No other information is collected.
 The collected information is used for the sole purpose of integrating with the internal BMA Motorcycle Association **Volunteer Hour Recording** process.
 
 Please see [Bytown Motorcycle Association](http://bma1.ca) for further information.
-
-Note: the skill will work if Alexa is configured for *Canadian english* or *American english*. French is currently not supported. Add an *issue* if you are interested in helping produce a French version.
 
 ## Terms of Use
 Please see [Bytown Motorcycle Accociation](http://bma1.ca/terms-of-use-s31.php).
