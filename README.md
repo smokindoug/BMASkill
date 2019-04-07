@@ -66,5 +66,7 @@ The collected information is used for the sole purpose of integrating with the i
 
 Please see [Bytown Motorcycle Association](http://bma1.ca) for further information.
 
+Note: the skill will work if Alexa is configured for *Canadian english* or *American english*. French is currently not supported. Add an *issue* if you are interested in helping produce a French version.
+
 ## Terms of Use
 Please see [Bytown Motorcycle Accociation](http://bma1.ca/terms-of-use-s31.php).
