@@ -8,4 +8,4 @@ No other information is collected.
 
 The collected information is used for the sole purpose of integrating with the internal BMA Motorcycle Association **Volunteer Hour Recording** process.
 
-Please see [Bytown Motorcycle Associate](http://bma1.ca) for further information.
+Please see [Bytown Motorcycle Association](http://bma1.ca) for further information.
