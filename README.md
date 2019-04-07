@@ -31,7 +31,7 @@ To add volunteer hours use phrases like these (after you have accessed the skill
 - add hours
 - add
 
-The skill will then ask you for the **number** of hours your want to add and the name of the volunteer **task**. The task helps us associate volunteer activity.
+The skill will then ask you for the **number** of hours your want to add. Also, is asks for a descripion of the volunteer **task**. The task helps us associate volunteer activity. Once you confirm the entered information, the skill will perform the add and report the new total.
 
 Again, you can combine opening the skill and adding volunteer hours together:
 - open b.m.a, for adding volunteer hours
