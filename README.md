@@ -3,7 +3,7 @@ BMA Alexa skill.
 
 Alexa skill for the [Bytown Motorcycle Association](http://bma1.ca/)'s volunteer hour recording application.
 
-##HowTo
+## HowTo
 If you have an [Alexa](https://alexa.amazon.ca/) account you can install and use this skill to **add** and **report** your **BMA Volunteer** hours! It will also **report** the number of hours you have in total (only the hours you have used the skill to record).
 
 You must grant the skill access to use your Alexa **Full Name**. This is how the skill identifies you.
